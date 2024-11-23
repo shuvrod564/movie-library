@@ -11,8 +11,9 @@ const Home = () => {
   const apiKey = import.meta.env.VITE_API_KEY;
   const apiToken = import.meta.env.VITE_API_TOKEN;
   const apiUrl = import.meta.env.VITE_API_URL;
-  const [movies, setMovies] = useState([])
-  // console.log(movies, 'movies');
+  const [movies, setMovies] = useState([]);
+  const [collections, setCollections] = useState([]);
+  console.log(collections, 'movies');
   // search for movies
 
 
@@ -27,15 +28,16 @@ const Home = () => {
       Authorization: 'Bearer ' + apiToken
     }
   };
+ 
 
   const collectionOptions = {
     method: 'GET',
     url: `${API_URL}/search/collection`,
-    headers: {
-      accept: 'application/json',
-      Authorization: 'Bearer ' + apiToken
-    }
-  }
+    params: {include_adult: 'false', language: 'en-US', page: '1'},
+    headers: {accept: 'application/json'}
+  };
+
+  
 
  
   useEffect(() => {
@@ -43,7 +45,7 @@ const Home = () => {
       .then(function (response) {
         // handle success
         setMovies(response.data.results);
-        console.log(response.data.results);
+        // console.log(response.data.results);
       })
       .catch(function (error) {
         // handle error
@@ -51,16 +53,13 @@ const Home = () => {
       });
 
     // collection fetch
-    axios(collectionOptions)
-      .then(function (response) {
-        // handle success 
-        console.log(response.data.results);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
-
+    axios
+    .request(options)
+    .then(function (res) {
+      // console.log(res.data, 'collection')
+      setCollections(res.data.results);
+    })
+    .catch(err => console.error(err));
 
 
 
